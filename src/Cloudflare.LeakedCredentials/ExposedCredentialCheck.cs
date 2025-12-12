@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Cloudflare.LeakedCredentials.Origin
 {
@@ -34,12 +34,14 @@ namespace Cloudflare.LeakedCredentials.Origin
 
             var trimmedValue = headerValue.Trim();
 
-            if (int.TryParse(trimmedValue, out int result))
+            if (!int.TryParse(trimmedValue, out int result))
             {
-                if (System.Enum.IsDefined(typeof(ExposedCredentialCheckResult), result) && result > 0)
-                {
-                    return (ExposedCredentialCheckResult)result;
-                }
+                return ExposedCredentialCheckResult.None;
+            }
+
+            if (Enum.IsDefined(typeof(ExposedCredentialCheckResult), result) && result > 0)
+            {
+                return (ExposedCredentialCheckResult)result;
             }
 
             return ExposedCredentialCheckResult.None;

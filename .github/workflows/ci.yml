@@ -1,0 +1,89 @@
+name: "CI: Build and Test"
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  dotnet-format:
+    name: .Net Format Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET (target .NET 8)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Diagnostic show dotnet info
+        run: |
+          dotnet --info
+          dotnet --list-sdks
+        shell: bash
+
+      - name: Ensure dotnet-format tool is available
+        run: |
+          if ! command -v dotnet-format >/dev/null 2>&1; then
+            dotnet tool install --global dotnet-format
+            echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+          fi
+        shell: bash
+
+      - name: Install dependencies
+        run: dotnet restore Cloudflare.LeakedCredentials.sln
+
+      - name: Run dotnet format
+        run: dotnet format Cloudflare.LeakedCredentials.sln --verify-no-changes --verbosity diagnostic
+
+  build_and_test:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: dotnet-format
+    defaults:
+      run:
+        shell: pwsh
+
+    env:
+      ASPNETCORE_ENVIRONMENT: CI
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_NOLOGO: 1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET (target .NET 8)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Diagnostic show dotnet info
+        run: |
+          dotnet --info
+          dotnet --list-sdks
+        shell: bash
+
+      - name: Install dependencies
+        run: |
+          dotnet restore Cloudflare.LeakedCredentials.sln `
+            --locked-mode
+
+      - name: Build Solution
+        run: |
+          dotnet build Cloudflare.LeakedCredentials.sln `
+            --configuration Release `
+            --no-restore
+
+      - name: Run tests
+        run: |
+          dotnet test Cloudflare.LeakedCredentials.sln `
+            --configuration Release `
+            --no-build `
+            --verbosity normal
