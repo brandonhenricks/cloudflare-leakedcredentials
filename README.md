@@ -1,5 +1,9 @@
 # Cloudflare.LeakedCredentials
 
+[![CI](https://github.com/brandonhenricks/cloudflare-leakedcredentials/actions/workflows/ci.yml/badge.svg)](https://github.com/brandonhenricks/cloudflare-leakedcredentials/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Cloudflare.LeakedCredentials.svg)](https://www.nuget.org/packages/Cloudflare.LeakedCredentials)
+
 A minimal [netstandard2.0](https://learn.microsoft.com/dotnet/standard/net-standard) library that parses Cloudflare's `Exposed-Credential-Check` response header so origin servers can detect credential exposure without pulling in framework dependencies.
 
 ## Purpose
