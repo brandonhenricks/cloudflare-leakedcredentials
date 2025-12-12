@@ -36,7 +36,7 @@ namespace Cloudflare.LeakedCredentials.Origin
 
             if (int.TryParse(trimmedValue, out int result))
             {
-                if (result >= 1 && result <= 4)
+                if (System.Enum.IsDefined(typeof(ExposedCredentialCheckResult), result) && result > 0)
                 {
                     return (ExposedCredentialCheckResult)result;
                 }
