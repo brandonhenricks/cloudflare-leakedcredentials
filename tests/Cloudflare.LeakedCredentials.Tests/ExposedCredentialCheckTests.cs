@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Cloudflare.LeakedCredentials.Origin;
 using Xunit;
 

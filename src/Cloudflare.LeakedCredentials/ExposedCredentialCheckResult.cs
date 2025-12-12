@@ -1,4 +1,4 @@
-namespace Cloudflare.LeakedCredentials.Origin
+﻿namespace Cloudflare.LeakedCredentials.Origin
 {
     /// <summary>
     /// Represents the result of an exposed credential check from Cloudflare.
